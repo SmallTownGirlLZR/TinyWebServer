@@ -104,3 +104,14 @@ void connection_pool::DestroyPool(){
 connection_pool::~connection_pool(){
     DestroyPool();
 }
+
+connectionRAII::connectionRAII(MYSQL **SQL, connection_pool *connPool){
+	*SQL = connPool->GetConnection();
+	
+	conRAII = *SQL;
+	poolRAII = connPool;
+}
+
+connectionRAII::~connectionRAII(){
+	poolRAII->ReleaseConnection(conRAII);
+}
