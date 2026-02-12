@@ -52,8 +52,8 @@ public:
     };
     enum HTTP_CODE
     {
-        NO_REQUEST,
-        GET_REQUEST,
+        NO_REQUEST,         /* Keep Going */
+        GET_REQUEST,        /* Finish */
         BAD_REQUEST,
         NO_RESOURCE,
         FORBIDDEN_REQUEST,
@@ -114,39 +114,41 @@ public:
     int m_state;  //读为0, 写为1
 
 private:
-    int m_sockfd;
-    sockaddr_in m_address;
-    char m_read_buf[READ_BUFFER_SIZE];
-    long m_read_idx;
-    long m_checked_idx;
-    int m_start_line;
-    char m_write_buf[WRITE_BUFFER_SIZE];
-    int m_write_idx;
-    CHECK_STATE m_check_state;
-    METHOD m_method;
-    char m_real_file[FILENAME_LEN];
-    char *m_url;
-    char *m_version;
-    char *m_host;
-    long m_content_length;
-    bool m_linger;
-    char *m_file_address;
-    struct stat m_file_stat;
-    struct iovec m_iv[2];
-    int m_iv_count;
-    int cgi;        //是否启用的POST
-    char *m_string; //存储请求头数据
-    int bytes_to_send;
-    int bytes_have_send;
-    char *doc_root;
+    int m_sockfd;                           /* 客户所对应的socket*/
+    sockaddr_in m_address;                  /* sockaddr_in 结构体保存客户端信息*/
+    char m_read_buf[READ_BUFFER_SIZE];      /* 读缓冲区*/
+    long m_read_idx;                        /* 读偏移量，标识已经读取m_read_idx字节的数据(char)*/
+    long m_checked_idx;                     /* 当前要解析的字符位置 */
+    int m_start_line;                       /* 当前解析的行的首字符位置，标定从状态机的parse_line */
+    char m_write_buf[WRITE_BUFFER_SIZE];    /* 写缓冲区 */
+    int m_write_idx;                        /* 写偏移量，标识已经写入m_write_idx字节的数据(char)*/
+    CHECK_STATE m_check_state;              /* 主状态机状态 */
+    METHOD m_method;                        /* HTTP 方法，如GET POST */
+    char m_real_file[FILENAME_LEN];         /* 真实路径名 如home/Lin/project/tinyWebServer/root/index.html */
+    char *m_url;                            /* 浏览器输入的url,如/index.html 拼接之后形成m_real_file */
+    char *m_version;                        /* HTTP版本，如HTTP/1.1 */
+    char *m_host;                           /* 从HTTP报文中解析出的客户主机名 */
+    long m_content_length;                  /* HTTP请求体的长度 */
+    bool m_linger;                          /* 是否长链接 */
+    char *m_file_address;                   /* 内存映射(mmap)的起始地址，用户零拷贝，将m_real_file映射到内存中 */
+    struct stat m_file_stat;                /* 所请求的资源的文件状态 如index.html的状态 */
+    struct iovec m_iv[2];                   /* 由于聚集写，[0]指向m_write_buffer(响应头部)，[1]指向m_file_address（所请求的资源）*/
+    int m_iv_count;                         /* 1(只含响应头)或2(包括响应体)*/
+    int cgi;                                /* 是否启用的POST */
+    char *m_string;                         /* 存储用户名和密码信息
+                                                user=123&passwd=123
+                                             */
+    int bytes_to_send;                      /* 需要发送的字节数 */
+    int bytes_have_send;                    /* 已经发送的字节数 */
+    char *doc_root;                         /* 网站根目录地址 */
 
     std::map<std::string, std::string> m_users;
-    int m_TRIGMode;
-    int m_close_log;
+    int m_TRIGMode;                         /* 设置ET 和 LT*/
+    int m_close_log;                        /* 是否关闭日志 */
 
-    char sql_user[100];
-    char sql_passwd[100];
-    char sql_name[100];
+    char sql_user[100];                     /* 数据库的用户名 */
+    char sql_passwd[100];                   /* 数据库用户的密码 */
+    char sql_name[100];                     /* 数据库名 */
 };
 
 #endif
