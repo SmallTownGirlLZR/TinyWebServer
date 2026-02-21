@@ -23,7 +23,7 @@
 
 #include "../lock/locker.h"
 #include "../CGImysql/sql_connection_pool.h"
-//#include "../timer/lst_timer.h"
+#include "../timer/lst_timer.h"
 #include "../log/log.h"
 
 class http_conn
@@ -80,10 +80,10 @@ public:
     bool write();
     sockaddr_in *get_address()
     {
-        return &m_address;
+        return &m_address;      /* 获得客户端的sockaddr_in 数据 */
     }
     void initmysql_result(connection_pool *connPool);
-    int timer_flag;
+    int timer_flag;         /* 是否需要强制关闭连接和清理定时器 */
     int improv;
 
 
@@ -111,7 +111,7 @@ public:
     static int m_epollfd;
     static int m_user_count;
     MYSQL *mysql;
-    int m_state;  //读为0, 写为1
+    int m_state;        /* m_state 为 0 代表可以从socket 读取，为 1 代表可以从socket 中写入 */ 
 
 private:
     int m_sockfd;                           /* 客户所对应的socket*/
