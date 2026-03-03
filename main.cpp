@@ -30,9 +30,7 @@ int main(int argc, char* argv[]){
 
     //监听
     server.eventListen();
-
     //运行
     server.eventLoop();
-
     return 0;
 }

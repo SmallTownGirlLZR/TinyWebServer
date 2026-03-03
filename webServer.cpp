@@ -18,7 +18,7 @@ WebServer::WebServer(){
     char server_path[200];
     /* Get the pathname of current working directory */
     getcwd(server_path,sizeof(server_path));
-    char root[6] = "/root";
+    char root[7] = "./root";
     /* 此文件必须和root在一个目录下 
        + 1 保存 '\0'
     */ 
@@ -257,7 +257,7 @@ void WebServer::dealwithread(int sockfd){
 
     /* Reactor */
     if(m_actormodel == 1){
-        /* timer对应的客户活跃，修改到期时间*/
+            /* timer对应的客户活跃，修改到期时间*/
         if(timer)   adjust_timer(timer);
 
         m_pool -> append(users + sockfd,0);
@@ -274,7 +274,7 @@ void WebServer::dealwithread(int sockfd){
         }
     }else{  /* Proactor */
         if(users[sockfd].read_once()){      /* 主线程负责 IO ,工作线程负责业务处理 */
-            LOG_INFO("deel with the client(%s)",inet_ntoa(users[sockfd].get_address() -> sin_addr));
+            LOG_INFO("deal with the client(%s)",inet_ntoa(users[sockfd].get_address() -> sin_addr));
             
             /* 线程池的run函数中对Reactor 和 Proactor 做出不同处理
              * Proactor 在 run 函数中 不进行IO
@@ -331,7 +331,6 @@ void WebServer::eventLoop(){
 
         for(int i = 0;i < number; i++){
             int sockfd = events[i].data.fd;
-
             /* listenfd 有活动 处理新连接*/
             if(sockfd == m_listenfd){
                 bool flag = dealclientdata();

@@ -8,40 +8,41 @@
 
 class Log {
 public:
-  static Log *getInstance() {
-    static Log instance;
-    return &instance;
-  }
+    static Log *getInstance() {
+        static Log instance;
+        return &instance;
+    }
 
-  static void *flush_log_thread(void *args) {
-    Log::getInstance()->async_write_log();
-    return nullptr;
-  }
+    static void *flush_log_thread(void *args) {
+        Log::getInstance()->async_write_log();
+        return nullptr;
+    }
   /*
       选择日志文件，
       日志缓冲区大小 （log_buf_size）
       最大行数 (split_lines)
       日志队列最大长度
   */
-  bool init(const char *file_name, int close_flag, int log_buf_size = 8192,
+    bool init(const char *file_name, int close_flag, int log_buf_size = 8192,
             int split_lines = 5000000, int max_queue_size = 0);
-  void write_log(int level, const char *format, ...);
+    void write_log(int level, const char *format, ...);
 
-  void flush(void);
+    void flush(void);
 
 private:
-  Log();
-  ~Log();
-  void *async_write_log() {
-    std::string single_log;
-    /* 从阻塞队列中取出一个string，并写入文件中 */
-    while (m_log_queue->pop(single_log)) {
-      m_mutex.lock();
-      /* 向文件中写入*/
-      fputs(single_log.c_str(), m_fp);
-      m_mutex.unlock();
+    Log();
+    ~Log();
+    void *async_write_log() {
+        std::string single_log;
+        /* 从阻塞队列中取出一个string，并写入文件中 */
+        while (m_log_queue->pop(single_log)) {
+            m_mutex.lock();
+            /* 向文件中写入*/
+            fputs(single_log.c_str(), m_fp);
+            m_mutex.unlock();
+        }
+        return nullptr;
     }
-  }
 
 private:
   char dir_name[128];
