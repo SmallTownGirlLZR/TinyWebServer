@@ -1,22 +1,123 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Sign in</title>
-    </head>
-    <body>
-<br/>
-<br/>
-    <div align="center"><font size="5"> <strong>登录</strong></font></div>
-    <br/>
-        <div class="login">
-                <form action="2CGISQL.cgi" method="post">
-                        <div align="center"><input type="text" name="user" placeholder="用户名" required="required"></div><br/>
-                        <div align="center"><input type="password" name="password" placeholder="登录密码" required="required"></div><br/>
-                        <div align="center"><button type="submit">确定</button></div>
-                </form>
-		<br/>
-               <div  align="center">提示：用户名或密码错误，请重试</div>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录失败 - WebServer</title>
+    <style>
+        /* 延续登录页的深蓝风格 */
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* 错误提示框样式 */
+        .error-banner {
+            background-color: #fff5f5;
+            color: #e53e3e;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #feb2b2;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+            color: #1e3c72;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-top: 5px;
+            border: 1px solid #feb2b2; /* 错误状态下边框微红 */
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .footer-links {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .footer-links a {
+            color: #1e3c72;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>登录</h2>
+
+        <div class="error-banner">
+            <span>⚠️</span> 提示：用户名或密码错误，请重试
         </div>
-    </body>
+
+        <form action="2CGISQL.cgi" method="post">
+            <div class="form-group">
+                <input type="text" name="user" placeholder="用户名" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="密码" required>
+            </div>
+            <button type="submit">重新登录</button>
+        </form>
+        
+        <div class="footer-links">
+            还没有账号？ <a href="register.html">立即注册</a>
+        </div>
+    </div>
+
+</body>
 </html>
